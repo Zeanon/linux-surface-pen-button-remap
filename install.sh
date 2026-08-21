@@ -14,14 +14,14 @@ fi
 
 cargo build --release
 sudo killall surface-pen-button
-sudo install -Dm=rwrr ./etc/remap.conf /etc/surface-pen-button/remap.conf
-sudo install -m=rwxrxrx ./target/release/surface-pen-button /usr/bin/surface-pen-button
+sudo install -Dm 644 ./etc/remap.conf /etc/surface-pen-button/remap.conf
+sudo install -m 755 ./target/release/surface-pen-button /usr/bin/surface-pen-button
 
 printf 'Do you want to install the systemd service (y/n)? '
 read answer
 
 if [ "$answer" != "${answer#[Yy]}" ]; then
-	sudo install -m=rwrr surface-pen-button.service /etc/systemd/system/surface-pen-button.service
+	sudo install -m 644 surface-pen-button.service /etc/systemd/system/surface-pen-button.service
 	sudo systemctl daemon-reload
 	sudo systemctl enable --now surface-pen-button.service
 	echo "Systemd service is installed, enabled and started!"
