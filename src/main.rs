@@ -179,10 +179,14 @@ fn handle_events(config: &Config, mut input: Device, output: UInputDevice) -> Re
 fn main() -> Result<()> {
     let config = config::load().context("Failed to load configuration file")?;
 
-    if let Some(device) = find_device(&config)? {
-        println!("Found device: '{}'", device.name().unwrap_or("<unknown>"));
-        handle_events(&config, device, setup_uinput_device(&config)?)
-    } else {
-        anyhow::bail!("Device not found");
+    loop {
+        let Some(device) = find_device(&config)? else {
+            std::thread::sleep(std::time::Duration::from_secs(2));
+            continue;
+        };
+        eprintln!("Found device: '{}'", device.name().unwrap_or("<unknown>"));
+        if let Err(e) = handle_events(&config, device, setup_uinput_device(&config)?) {
+            eprintln!("Lost device: {e}");
+        }
     }
 }
