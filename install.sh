@@ -17,7 +17,7 @@ sudo killall surface-pen-button
 sudo install -Dm 644 ./etc/remap.conf /etc/surface-pen-button/remap.conf
 sudo install -m 755 ./target/release/surface-pen-button /usr/bin/surface-pen-button
 
-printf 'Do you want to install the systemd service (y/n)? '
+printf 'Do you want to install the systemd service (y/N)? '
 read answer
 
 if [ "$answer" != "${answer#[Yy]}" ]; then
@@ -27,4 +27,15 @@ if [ "$answer" != "${answer#[Yy]}" ]; then
 	echo "Systemd service is installed, enabled and started!"
 else
 	echo "Systemd service is not installed! Run this tool via 'sudo surface-pen-button'"
+fi
+
+
+printf 'Do you want to clean the target folder (y/N)? '
+read answer
+
+if [ "$answer" != "${answer#[Yy]}" ]; then
+	sudo rm -r target/
+	echo "Removed the target folder."
+else
+	echo "No cleanup was performed."
 fi
